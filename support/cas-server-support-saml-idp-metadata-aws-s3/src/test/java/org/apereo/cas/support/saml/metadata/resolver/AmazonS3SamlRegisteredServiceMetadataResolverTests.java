@@ -1,8 +1,10 @@
 package org.apereo.cas.support.saml.metadata.resolver;
 
+import org.apereo.cas.config.SamlIdPAmazonS3MetadataConfiguration;
 import org.apereo.cas.configuration.model.support.saml.idp.SamlIdPProperties;
 import org.apereo.cas.support.saml.OpenSamlConfigBean;
 import org.apereo.cas.support.saml.services.SamlRegisteredService;
+import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.SamlRegisteredServiceMetadataResolver;
 import org.apereo.cas.util.CollectionUtils;
 
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -11,17 +13,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import lombok.Getter;
 import lombok.val;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import org.apache.http.client.methods.HttpGet;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -32,13 +33,16 @@ import static org.mockito.Mockito.*;
  * @author Misagh Moayyed
  * @since 5.3.0
  */
-@SpringBootTest(classes = RefreshAutoConfiguration.class)
-public class AmazonS3SamlRegisteredServiceMetadataResolverTests {
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+@Getter
+@SpringBootTest(classes = {
+    RefreshAutoConfiguration.class,
+    SamlIdPAmazonS3MetadataConfiguration.class
+})
+public class AmazonS3SamlRegisteredServiceMetadataResolverTests extends BaseSamlIdPServicesTests{
 
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
+    @Autowired
+    @Qualifier("amazonS3SamlRegisteredServiceMetadataResolver")
+    private SamlRegisteredServiceMetadataResolver resolver;
 
     @Test
     public void verifyAction() throws Exception {
@@ -91,5 +95,10 @@ public class AmazonS3SamlRegisteredServiceMetadataResolverTests {
         service.setName("SAML");
         service.setId(100);
         assertFalse(r.resolve(service).isEmpty());
+    }
+
+    @Override
+    public String getMetadataLocation() {
+        return "awss3://";
     }
 }

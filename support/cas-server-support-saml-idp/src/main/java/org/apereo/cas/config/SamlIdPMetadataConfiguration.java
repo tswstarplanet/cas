@@ -18,6 +18,7 @@ import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.Classpat
 import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.FileSystemResourceMetadataResolver;
 import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.GroovyResourceMetadataResolver;
 import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.MetadataQueryProtocolMetadataResolver;
+import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.SamlRegisteredServiceMetadataResolver;
 import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.UrlResourceMetadataResolver;
 import org.apereo.cas.support.saml.services.idp.metadata.plan.DefaultSamlRegisteredServiceMetadataResolutionPlan;
 import org.apereo.cas.support.saml.services.idp.metadata.plan.SamlRegisteredServiceMetadataResolutionPlan;
@@ -140,6 +141,46 @@ public class SamlIdPMetadataConfiguration {
             samlRegisteredServiceMetadataResolvers());
     }
 
+    @ConditionalOnMissingBean(name = "metadataQueryProtocolMetadataResolver")
+    @Bean
+    public SamlRegisteredServiceMetadataResolver metadataQueryProtocolMetadataResolver() {
+        val samlIdp = casProperties.getAuthn().getSamlIdp();
+        val cfgBean = openSamlConfigBean.getIfAvailable();
+        return new MetadataQueryProtocolMetadataResolver(samlIdp, cfgBean);
+    }
+
+    @ConditionalOnMissingBean(name = "fileSystemResourceMetadataResolver")
+    @Bean
+    public SamlRegisteredServiceMetadataResolver fileSystemResourceMetadataResolver() {
+        val samlIdp = casProperties.getAuthn().getSamlIdp();
+        val cfgBean = openSamlConfigBean.getIfAvailable();
+        return new FileSystemResourceMetadataResolver(samlIdp, cfgBean);
+    }
+
+    @ConditionalOnMissingBean(name = "urlResourceMetadataResolver")
+    @Bean
+    public SamlRegisteredServiceMetadataResolver urlResourceMetadataResolver() {
+        val samlIdp = casProperties.getAuthn().getSamlIdp();
+        val cfgBean = openSamlConfigBean.getIfAvailable();
+        return new UrlResourceMetadataResolver(samlIdp, cfgBean);
+    }
+
+    @ConditionalOnMissingBean(name = "classpathResourceMetadataResolver")
+    @Bean
+    public SamlRegisteredServiceMetadataResolver classpathResourceMetadataResolver() {
+        val samlIdp = casProperties.getAuthn().getSamlIdp();
+        val cfgBean = openSamlConfigBean.getIfAvailable();
+        return new ClasspathResourceMetadataResolver(samlIdp, cfgBean);
+    }
+
+    @ConditionalOnMissingBean(name = "groovyResourceMetadataResolver")
+    @Bean
+    public SamlRegisteredServiceMetadataResolver groovyResourceMetadataResolver() {
+        val samlIdp = casProperties.getAuthn().getSamlIdp();
+        val cfgBean = openSamlConfigBean.getIfAvailable();
+        return new GroovyResourceMetadataResolver(samlIdp, cfgBean);
+    }
+
     @ConditionalOnMissingBean(name = "samlRegisteredServiceMetadataResolvers")
     @Bean
     public SamlRegisteredServiceMetadataResolutionPlan samlRegisteredServiceMetadataResolvers() {
@@ -147,11 +188,11 @@ public class SamlIdPMetadataConfiguration {
 
         val samlIdp = casProperties.getAuthn().getSamlIdp();
         val cfgBean = openSamlConfigBean.getIfAvailable();
-        plan.registerMetadataResolver(new MetadataQueryProtocolMetadataResolver(samlIdp, cfgBean));
-        plan.registerMetadataResolver(new FileSystemResourceMetadataResolver(samlIdp, cfgBean));
-        plan.registerMetadataResolver(new UrlResourceMetadataResolver(samlIdp, cfgBean));
-        plan.registerMetadataResolver(new ClasspathResourceMetadataResolver(samlIdp, cfgBean));
-        plan.registerMetadataResolver(new GroovyResourceMetadataResolver(samlIdp, cfgBean));
+        plan.registerMetadataResolver(metadataQueryProtocolMetadataResolver());
+        plan.registerMetadataResolver(fileSystemResourceMetadataResolver());
+        plan.registerMetadataResolver(urlResourceMetadataResolver());
+        plan.registerMetadataResolver(classpathResourceMetadataResolver());
+        plan.registerMetadataResolver(groovyResourceMetadataResolver());
 
         val configurers =
             this.applicationContext.getBeansOfType(SamlRegisteredServiceMetadataResolutionPlanConfigurator.class, false, true);

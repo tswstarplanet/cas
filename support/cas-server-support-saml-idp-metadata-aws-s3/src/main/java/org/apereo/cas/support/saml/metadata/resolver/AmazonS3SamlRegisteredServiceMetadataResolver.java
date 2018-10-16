@@ -9,7 +9,6 @@ import org.apereo.cas.support.saml.services.idp.metadata.cache.resolver.BaseSaml
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.IOUtils;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -80,17 +79,11 @@ public class AmazonS3SamlRegisteredServiceMetadataResolver extends BaseSamlRegis
 
     @Override
     public boolean supports(final SamlRegisteredService service) {
-        try {
-            val metadataLocation = service.getMetadataLocation();
-            return metadataLocation.trim().startsWith("awss3://");
-        } catch (final Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return false;
+        val metadataLocation = service.getMetadataLocation();
+        return metadataLocation.trim().startsWith("awss3://");
     }
 
     @Override
-    @SneakyThrows
     public void saveOrUpdate(final SamlMetadataDocument document) {
         val is = new ByteArrayInputStream(document.getValue().getBytes(StandardCharsets.UTF_8));
         val metadata = new ObjectMetadata();
