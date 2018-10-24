@@ -1,14 +1,12 @@
 package org.apereo.cas.services;
 
-import org.apereo.cas.category.CouchDbCategory;
-import org.apereo.cas.config.CasCouchDbCoreConfiguration;
 import org.apereo.cas.config.CouchDbServiceRegistryConfiguration;
 import org.apereo.cas.couchdb.core.CouchDbConnectorFactory;
 import org.apereo.cas.couchdb.services.RegisteredServiceCouchDbRepository;
 import org.apereo.cas.util.junit.ConditionalIgnore;
 import org.apereo.cas.util.junit.RunningContinuousIntegrationCondition;
 
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,7 @@ import java.util.Collections;
         "cas.serviceRegistry.couchDb.password="
     })
 @ConditionalIgnore(condition = RunningContinuousIntegrationCondition.class)
-@Category(CouchDbCategory.class)
+@Tag("couchdb")
 public class CouchDbServiceRegistryTests extends AbstractServiceRegistryTests {
 
     @Autowired
