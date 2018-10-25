@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is {@link CasConfigurationJasyptCipherExecutorTests}.
@@ -28,7 +28,7 @@ public class CasConfigurationJasyptCipherExecutorTests {
 
     private CasConfigurationJasyptCipherExecutor jasypt;
 
-    BeforeEach
+    @BeforeEach
     public void initialize() {
         this.jasypt = new CasConfigurationJasyptCipherExecutor(this.environment);
     }

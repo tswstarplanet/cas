@@ -43,6 +43,7 @@ import org.apereo.cas.web.support.DefaultArgumentExtractor;
 
 import lombok.val;
 import org.junit.Rule;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.pac4j.core.client.BaseClient;
 import org.pac4j.core.client.Clients;
@@ -65,8 +66,8 @@ import org.springframework.webflow.test.MockRequestContext;
 import java.util.Locale;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
