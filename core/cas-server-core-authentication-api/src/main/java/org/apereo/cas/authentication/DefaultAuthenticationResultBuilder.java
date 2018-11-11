@@ -29,14 +29,14 @@ public class DefaultAuthenticationResultBuilder implements AuthenticationResultB
 
     private static final long serialVersionUID = 6180465589526463843L;
     private final Set<Authentication> authentications = Collections.synchronizedSet(new LinkedHashSet<>());
-    private List<Credential> providedCredentials = new ArrayList<>();
+    private final List<Credential> providedCredentials = new ArrayList<>();
 
     private static void buildAuthenticationHistory(final Set<Authentication> authentications,
                                                    final Map<String, Object> authenticationAttributes,
                                                    final Map<String, Object> principalAttributes,
                                                    final AuthenticationBuilder authenticationBuilder) {
 
-        LOGGER.debug("Collecting authentication history based on [{}] authentication events", authentications.size());
+        LOGGER.trace("Collecting authentication history based on [{}] authentication events", authentications.size());
         authentications.forEach(authn -> {
             val authenticatedPrincipal = authn.getPrincipal();
             LOGGER.debug("Evaluating authentication principal [{}] for inclusion in result", authenticatedPrincipal);

@@ -23,7 +23,7 @@ public class CouchDbGoogleAuthenticatorTokenCredentialRepository extends BaseGoo
     /**
      * CouchDb instance for tokens storage.
      */
-    private OneTimeTokenAccountCouchDbRepository couchDb;
+    private final OneTimeTokenAccountCouchDbRepository couchDb;
 
     public CouchDbGoogleAuthenticatorTokenCredentialRepository(final IGoogleAuthenticator googleAuthenticator,
                                                                final OneTimeTokenAccountCouchDbRepository googleAuthenticatorAccountRepository,
@@ -37,6 +37,7 @@ public class CouchDbGoogleAuthenticatorTokenCredentialRepository extends BaseGoo
         val tokenAccount = couchDb.findOneByUsername(username);
         if (tokenAccount == null) {
             LOGGER.debug("No record could be found for google authenticator id [{}]", username);
+            return null;
         }
         return decode(tokenAccount);
     }
